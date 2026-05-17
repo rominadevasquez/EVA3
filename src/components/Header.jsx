@@ -1,4 +1,4 @@
-nst Header = () => {
+const Header = () => {
  return (
  <header className="header">
  <h1>Gestor de Cursos React</h1>
