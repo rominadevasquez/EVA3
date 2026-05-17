@@ -1,20 +1,51 @@
 import { useEffect, useState } from "react";
-export const useLocalStorage = (key, initialValue) => {
- const [value, setValue] = useState(() => {
+
+const isLocalStorageAvailable = () => {
  try {
- const storedValue = localStorage.getItem(key);
- return storedValue ? JSON.parse(storedValue) : initialValue;
+ const testKey = "__local_storage_test__";
+ window.localStorage.setItem(testKey, testKey);
+ window.localStorage.removeItem(testKey);
+ return true;
  } catch (error) {
- console.error("Error leyendo localStorage:", error);
+ console.warn("localStorage no está disponible:", error);
+ return false;
+ }
+};
+
+const readStorageValue = (key, initialValue) => {
+ if (!isLocalStorageAvailable()) {
  return initialValue;
  }
- });
- useEffect(() => {
+
  try {
- localStorage.setItem(key, JSON.stringify(value));
+ const storedValue = window.localStorage.getItem(key);
+ return storedValue !== null ? JSON.parse(storedValue) : initialValue;
  } catch (error) {
- console.error("Error guardando en localStorage:", error);
+ console.error(`useLocalStorage: no se pudo leer ${key} de localStorage`, error);
+ return initialValue;
  }
- }, [key, value]);
- return [value, setValue];
+};
+
+export const useLocalStorage = (key, initialValue) => {
+ const [storedValue, setStoredValue] = useState(() => readStorageValue(key, initialValue));
+
+ useEffect(() => {
+ if (!isLocalStorageAvailable()) {
+ return;
+ }
+
+ try {
+ window.localStorage.setItem(key, JSON.stringify(storedValue));
+ } catch (error) {
+ console.error(`useLocalStorage: no se pudo guardar ${key} en localStorage`, error);
+ }
+ }, [key, storedValue]);
+
+ const setValue = (value) => {
+ setStoredValue((prevValue) =>
+ typeof value === "function" ? value(prevValue) : value
+ );
+ };
+
+ return [storedValue, setValue];
 };

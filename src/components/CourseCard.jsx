@@ -1,12 +1,20 @@
 import { sanitizeText } from "../utils/sanitize";
-const CourseCard = ({ course, isFavorite, onToggleFavorite }) => {
- const safeTitle = sanitizeText(course.title);
- const safeDescription = sanitizeText(course.description);
+
+const CourseCard = ({
+ course,
+ isFavorite = false,
+ onToggleFavorite = () => {},
+ className = "",
+}) => {
+ const safeTitle = sanitizeText(course?.title);
+ const safeDescription = sanitizeText(course?.description);
+ const safeTeacherId = course?.teacherId ?? "Desconocido";
+
  return (
- <article className="course-card">
+ <article className={`course-card ${className}`.trim()}>
  <h2>{safeTitle}</h2>
  <p>{safeDescription}</p>
- <small>Docente ID: {course.teacherId}</small>
+ <small>Docente ID: {safeTeacherId}</small>
  <button
  type="button"
  onClick={() => onToggleFavorite(course)}
@@ -17,4 +25,5 @@ const CourseCard = ({ course, isFavorite, onToggleFavorite }) => {
  </article>
  );
 };
+
 export default CourseCard;
