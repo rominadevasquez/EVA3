@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import "./App.css";
-import Header from "../components/Header";
-import SearchBar from "../components/SearchBar";
-import CourseList from "../components/CourseList";
-import { getCourses } from "../services/courseService";
+import Header from "./components/Header";
+import SearchBar from "./components/SearchBar";
+import CourseList from "./components/CourseList";
+import { getCourses } from "./services/courseService";
 import { useLocalStorage } from "./hooks/useLocalStorage";
 function App() {
  const [courses, setCourses] = useState([]);

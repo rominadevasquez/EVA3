@@ -6,7 +6,7 @@ const SearchBar = ({ searchTerm, onSearchChange }) => {
  id="search"
  type="text"
  value={searchTerm}
- onChange={(event) => onSearchChange(event.target.value)}
+ onChange={(event) => onSearchChange(event.target.value.toLowerCase().trim())}
  placeholder="Ejemplo: programación, seguridad, react..."
  maxLength={50}
  />
